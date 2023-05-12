@@ -1,4 +1,4 @@
-function throttleAcceptance = ThrottleAcceptance(run, gLat, time)
+function [throttleAcceptance, throttleAcceptanceSmooth] = ThrottleAcceptance(run, gLat, time)
 % ThrottleAcceptance Returns a list of percentages for the throttle
 % acceptance for each maximum or minimum in gLat. 
 
@@ -24,6 +24,11 @@ for i = 1:size(extremaIndicies)
 end
 throttleAcceptance = 100 * (abs(gLat(nextOpenThrottles)) ./ ...
     abs(gLat(extremaIndicies)));
+throttleAcceptanceSmooth = 100 * ((smoothedData(nextOpenThrottles)) ./ ...
+    (smoothedData(extremaIndicies)));
+
+plot(time, gLat, time, smoothedData, time, run.ThrottlePos / 100)
+legend("gLat", "Smoothed gLat", "Throttle Position")
 
 end
 
