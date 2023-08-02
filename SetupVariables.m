@@ -5,8 +5,8 @@ if gtype == "IMU"
     gLat = run.VehicleAccelLateralIMU;
     gLong = run.VehicleAccelLongIMU;
 else % C185
-    gLat = lapTrimRun.GForceLatC185;
-    gLong = lapTrimRun.GForceLongC185;
+    gLat = run.GForceLatC185;
+    gLong = run.GForceLongC185;
 end
 
 if speedtype == "GroundSpeed"

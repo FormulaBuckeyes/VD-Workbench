@@ -1,12 +1,14 @@
-function [] = TrackDisplay(long, lat, data)
+function [] = TrackDisplay(long, lat, data, colorscheme)
 %TrackDisplay Visualize the track shape, and overlay variables on track
 %   Data is optional - if given it will apply a gradient to the track based
-%   on the value at that point on track
+%   on the value of data at that point on track
+%   Colorscheme is optional - input will be passed into colormap()
 
 arguments
     long (1,:)
     lat (1,:)
     data = zeros(size(lat))'
+    colorscheme = turbo
 end
 
 % Code adapted from 
@@ -20,7 +22,7 @@ surface([x;x],[y;y],[z;z],[col;col],...
         'edgecol','interp',...
         'linew',1);
 colorbar;
-colormap(turbo);
+colormap(colorscheme);
 
 % Unfortunately, there is no color gradient workaround for geoplots (that 
 % I know of), but if you just want a to-scale track map use this command
