@@ -1,4 +1,4 @@
-function [] = TrackDisplay(long, lat, data, colorscheme)
+function [] = TrackDisplay(long, lat, data, colorscheme, colorLimits)
 %TrackDisplay Visualize the track shape, and overlay variables on track
 %   Data is optional - if given it will apply a gradient to the track based
 %   on the value of data at that point on track
@@ -9,6 +9,7 @@ arguments
     lat (1,:)
     data = zeros(size(lat))'
     colorscheme = turbo
+    colorLimits = [0 110]
 end
 
 % Code adapted from 
@@ -22,6 +23,7 @@ surface([x;x],[y;y],[z;z],[col;col],...
         'edgecol','interp',...
         'linew',1);
 colorbar;
+clim(colorLimits)
 colormap(colorscheme);
 
 % Unfortunately, there is no color gradient workaround for geoplots (that 
