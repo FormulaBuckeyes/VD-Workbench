@@ -1,6 +1,9 @@
 # GITIGNORE Files will not push or pull files with these extensions. 
 # Since we're using GitHub to save our work, the autosave files are redundant. 
 
+# CUSTOM: Don't upload the data folder since those logs are too large
+Data/
+
 # Windows default autosave extension
 *.asv
 
