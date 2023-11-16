@@ -3,6 +3,8 @@ classdef FB2223
 
     properties
         wheelbase = 1.616;
+        trackwidthFront = 1.2;
+        trackwidthRear = 1.175;
         steerRatio = 3.5;
         FLShockZero = 19.19;
         FRShockZero = 23.62;
