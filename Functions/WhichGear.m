@@ -9,10 +9,10 @@ DriveSpeed = run.DriveSpeed * 1000 / 60; % km/h --> meters/minutes
 Time = run.Time; % seconds
 
 %% CONSTANTS
-GEAR_RATIOS = [4.2222, 3.5185, 3.0494, 2.7536, 2.5509]
-FINAL_DRIVE_RATIO = 3.273
+GEAR_RATIOS = [4.2222, 3.5185, 3.0494, 2.7536, 2.5509];
+FINAL_DRIVE_RATIO = 3.273;
 
-TIRE_RADIUS = 0.203 % meters
+TIRE_RADIUS = 0.203; % meters
 
 COMBINED_RATIOS = FINAL_DRIVE_RATIO * GEAR_RATIOS; % Gear1 > Gear2 > Gear3 > Gear4 > Gear5
 
