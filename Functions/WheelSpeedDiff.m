@@ -5,7 +5,7 @@ function [RearSpeedDiff, FrontSpeedDiff, YRTW] = WheelSpeedDiff(run, car)
 
 YawRate = run.GyroYawVelocityIMU*pi/180; % [rad/s]
 TW = car.trackwidthRear; % [m]
-YRTW = abs(YawRate*TW*3.6); %[km/h] + = right, - = left
+YRTW = YawRate*TW*3.6; %[km/h] + = right, - = left
 RearSpeedL = run.DriveSpeedLeft; 
 RearSpeedR = run.DriveSpeedRight;
 RearSpeedDiff = RearSpeedL-RearSpeedR; 
