@@ -9,8 +9,8 @@ DriveSpeed = run.DriveSpeed * 1000 / 60; % km/h --> meters/minutes
 Time = run.Time; % seconds
 
 %% CONSTANTS
-GEAR_RATIOS = [4.2222, 3.5185, 3.0494, 2.7536, 2.5509]
-FINAL_DRIVE_RATIO = 3.273
+GEAR_RATIOS = [4.2222, 3.5185, 3.0494, 2.7536, 2.5509];
+FINAL_DRIVE_RATIO = 3.273;
 
 TIRE_RADIUS = 0.198 % meters
 

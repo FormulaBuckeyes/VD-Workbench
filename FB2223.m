@@ -2,15 +2,16 @@ classdef FB2223
     %FB2223 Car specs for the Formula Buckeyes FB-23
 
     properties
-        wheelbase = 1.616;
-        trackwidthFront = 1.2;
-        trackwidthRear = 1.175;
+        wheelbase = 1.616;      % [m]
+        trackwidthFront = 1.2;  % [m]
+        trackwidthRear = 1.175; % [m]
         steerRatio = 3.5;
-        FLShockZero = 19.19;
-        FRShockZero = 23.62;
-        RLShockZero = 38.76;
-        RRShockZero = 35.94;
-%         rollRate = ;
+        FLShockZero = 19.19;    % [mm]
+        FRShockZero = 23.62;    % [mm]
+        RLShockZero = 38.76;    % [mm]
+        RRShockZero = 35.94;    % [mm]
+        FrontARBMotionRatio = 0.58;
+        RearARBMotionRatio = 0.39;
     end
 
     methods
