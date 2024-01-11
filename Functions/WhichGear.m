@@ -12,7 +12,7 @@ Time = run.Time; % seconds
 GEAR_RATIOS = [4.2222, 3.5185, 3.0494, 2.7536, 2.5509]
 FINAL_DRIVE_RATIO = 3.273
 
-TIRE_RADIUS = 0.203 % meters
+TIRE_RADIUS = 0.198 % meters
 
 COMBINED_RATIOS = FINAL_DRIVE_RATIO * GEAR_RATIOS; % Gear1 > Gear2 > Gear3 > Gear4 > Gear5
 
@@ -28,11 +28,11 @@ PredictedCombinedRatios = EngineRPM ./ WheelRPM; % Values should match with valu
 WhichGear = zeros(length(GEAR_RATIOS), length(EngineRPM));
 
 % Gear 1
-WhichGear(1,:) = PredictedCombinedRatios > mean(COMBINED_RATIOS(1:2));
+WhichGear(1,:) = PredictedCombinedRatios >= mean(COMBINED_RATIOS(1:2));
 
 % Gears 2-4
 for i = 2:length(COMBINED_RATIOS)-1
-    WhichGear(i,:) = (PredictedCombinedRatios < mean(COMBINED_RATIOS(i-1:i))) .* (PredictedCombinedRatios > mean(COMBINED_RATIOS(i:i+1)));
+    WhichGear(i,:) = (PredictedCombinedRatios < mean(COMBINED_RATIOS(i-1:i))) .* (PredictedCombinedRatios >= mean(COMBINED_RATIOS(i:i+1)));
 end
 
 % Gear 5
