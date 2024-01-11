@@ -12,6 +12,9 @@ classdef FB2223
         RRShockZero = 35.94;    % [mm]
         FrontARBMotionRatio = 0.58;
         RearARBMotionRatio = 0.39;
+        GearRatios = [4.2222, 3.5185, 3.0494, 2.7536, 2.5509];
+        FinalDriveRatio = 3.273;
+        TireRadius = 0.198;     % [m]
     end
 
     methods
