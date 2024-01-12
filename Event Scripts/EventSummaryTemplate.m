@@ -17,6 +17,8 @@ fprintf("Track: %s", metadata.track)
 fprintf("Driver: %s", metadata.driver)
 fprintf("Run Date: %s", metadata.logDate)
 fprintf("Run Time: %s", metadata.logTime)
+fprintf("Session Distance: %d", totalDistance)
+fprintf("Session Length: %d", totalTime)
 fprintf("Comments: %s", metadata.comment)
 fprintf("Report Generated: %s", datetime("now"))
 
