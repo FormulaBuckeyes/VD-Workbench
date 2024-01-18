@@ -1,5 +1,6 @@
 %% Acceleration Report
 clf; close all;
+addpath("../Functions/");
 [filename, path] = uigetfile('*.csv', 'Select MoTeC Output File (.csv)');
 data = motecImport(filename,pwd);
 metadata = motecMetadata(filename);
@@ -35,7 +36,8 @@ suspensionAccelPlot(lapData.(runID),n,lapTimes(k))
 end
 
 %%
-outputFilename = sprintf("Accel%s_%s.pdf", ...
+outputFilename = sprintf("%sAccel%s_%s.pdf", ...
+    "../Logs/", ...
     strrep(metadata.logDate,"/","-"), ...
     strrep(sprintf("%.2f",min(lapTimes)),".","-"));
 
