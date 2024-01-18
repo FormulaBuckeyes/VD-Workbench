@@ -78,7 +78,8 @@ function [runs, times] = parseAccelRuns(data)
     end
 end
 
-function suspensionAccelPlot(data,smoothFactor,t)
+function suspensionAccelPlot(data,smoothFactor,lapTime)
+    % Variables
     time = data.Time;
     SuspPosFL = data.SuspPosFL-data.SuspPosFL(1);
     SuspPosFR = data.SuspPosFR-data.SuspPosFR(1);
@@ -88,9 +89,39 @@ function suspensionAccelPlot(data,smoothFactor,t)
     SP_RF = smoothdata(SuspPosFR,'gaussian',smoothFactor);
     SP_LR = smoothdata(SuspPosRL,'gaussian',smoothFactor);
     SP_RR = smoothdata(SuspPosRR,'gaussian',smoothFactor);
+    MRF = 0.955; MRR = 0.99; L = 1616; % Motion Ratios [~] + Wheelbase [mm]
+    
+    % Heave & Pitch
+    heave = SP_LF+SP_RF+SP_LR+SP_RR;
+    pitch = atand(((SP_LF+SP_RF)*MRF/2-(SP_LR-SP_RR)*MRR/2)/L);
     
     figure;
-    tiledlayout(2,2); sgtitle(sprintf('Damper Positions - Time: %.3f [s]', t));
+    tiledlayout(3,1); sgtitle(sprintf('Sus Heave and Pitch - Time: %.3f [s]', lapTime));
+    z = zoom;
+    z.Motion = 'Horizontal';
+    ax1 = nexttile;
+    plot(time,data.GPSSpeed,'b-'); grid on; hold on;
+    plot(time,data.DriveSpeed,'r-')
+    setAxesZoomConstraint(z,ax1,'x');
+    ylabel('Speed [mph]'); ylim([0 70]);
+    legend('GPS Speed','Drive Speed','Location','southeast');
+
+    ax2 = nexttile; grid on; hold on;
+    plot(time,heave,'b-'); 
+    ylabel('Heave [mm]'); ylim([-25 1])
+    setAxesZoomConstraint(z,ax2,'x');
+
+    ax3 = nexttile; grid on; hold on;
+    plot(time,pitch,'b-');
+    ylabel('Pitch [deg]'); ylim([-0.15 0.25]);
+    setAxesZoomConstraint(z,ax3,'x');
+
+    linkaxes([ax1 ax2 ax3],'x');
+    xlim([min(time) max(time)]);
+
+    % Damper Positions
+    figure;
+    tiledlayout(2,2); sgtitle(sprintf('Damper Positions - Time: %.3f [s]', lapTime));
     z = zoom;
     z.Motion = 'Horizontal';
 
