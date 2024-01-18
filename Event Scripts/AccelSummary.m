@@ -2,7 +2,7 @@
 clf; close all;
 addpath("../Functions/");
 [filename, path] = uigetfile('*.csv', 'Select MoTeC Output File (.csv)');
-data = motecImport(filename,pwd);
+data = motecImport(filename,path);
 metadata = motecMetadata(filename);
 totalDistance = max(data.Distance);
 totalTime = max(data.Time);

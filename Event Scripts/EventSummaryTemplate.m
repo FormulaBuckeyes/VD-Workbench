@@ -1,49 +1,52 @@
 %% Event Name
 clf; close all;
+addpath("../Functions/");
 [filename, path] = uigetfile('*.csv', 'Select MoTeC Output File (.csv)');
-data = motecImport(filename,pwd);
+data = motecImport(filename,path);
 metadata = motecMetadata(filename);
 totalDistance = max(data.Distance);
 totalTime = max(data.Time);
 
-% Replace Event with actual event in real code
-% Replace Subteam with actual subteam in real code
-lapData = parseEventRuns(data); % Need to make this a real thing
-lapTimes = eventLapTimes(lapData); % Need to make this a real thing
+[lapData, lapTimes] = parseEventRuns(data);
 
 %% Summary
 
-fprintf("Track: %s", metadata.track)
-fprintf("Driver: %s", metadata.driver)
-fprintf("Run Date: %s", metadata.logDate)
-fprintf("Run Time: %s", metadata.logTime)
-fprintf("Session Distance: %d", totalDistance)
-fprintf("Session Length: %d", totalTime)
-fprintf("Comments: %s", metadata.comment)
-fprintf("Report Generated: %s", datetime("now"))
+fprintf("Track: %s\n", metadata.track)
+fprintf("Driver: %s\n", metadata.driver)
+fprintf("Run Date: %s\n", metadata.logDate)
+fprintf("Run Time: %s\n", metadata.logTime)
+fprintf("Session Distance: %d m\n", totalDistance)
+fprintf("Session Length: %d s\n", totalTime)
+fprintf("Comments: %s\n", metadata.comment)
+fprintf("Report Generated: %s\n", datetime("now"))
 
-% lap times
+summaryTable = table((1:length(size(lapData)))',lapTimes', ...
+    'VariableNames',["Lap #" "Lap Time"]);
+disp(summaryTable)
 
-% left vs right (average of gLat for all lapData - should be 0)
-% (could be moved to suspension)
-
-%% Subteam
-
-subteamEventPlot(lapData)
-
-% This function should make plot(s)
-% One function per subteam would make formatting very nice
-% There can't be any comments in this script for formatting reasons
-% so do all of it inside the function.
-
-%% Subteam
-
-% new plot
+fprintf("Average gLat: %f\n", mean(data.GForceLatC185(1:end-1)))
 
 %%
-% This has not been tested yet but should make a pdf, then 
-% rename and move it
-% Need a better naming convention for the file
-% outputFilename = sprintf("./Logs/Event%s.pdf","1");
-% publish("EventSummaryTemplate.m","format","pdf", showCode=false)
-% movefile "EventSummaryTemplate.pdf" outputFilename
+for k=1:length(lapTimes)
+    runID = strcat('r',num2str(k));
+    n = int64(0.25/(data.Time(2)-data.Time(1))); % 0.25 second window size 
+%% Suspension
+suspensionEventPlot(lapData.(runID),n,lapTimes(k))
+
+end
+
+%%
+outputFilename = sprintf("%sEvent%s_%s.pdf", ...
+    "../Logs/", ...
+    strrep(metadata.logDate,"/","-"), ...
+    strrep(sprintf("%.2f",min(lapTimes)),".","-"));
+
+%%
+
+function [runs, times] = parseEventRuns(data)
+
+end
+
+function suspensionEventPlot(data, lapTime, smoothfactor)
+
+end
