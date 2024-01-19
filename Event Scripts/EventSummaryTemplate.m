@@ -9,6 +9,8 @@ totalTime = max(data.Time);
 
 [lapData, lapTimes] = parseEventRuns(data);
 
+car = FB2223();
+
 %% Summary
 
 fprintf("Track: %s\n", metadata.track)
@@ -44,6 +46,10 @@ outputFilename = sprintf("%sEvent%s_%s.pdf", ...
 %%
 
 function [runs, times] = parseEventRuns(data)
+% Find all the laps (given by beacons) with an absolute value latG > 1,
+% then exoprt those as the laps. Therefore "laps" are turns. 
+
+
 
 end
 
