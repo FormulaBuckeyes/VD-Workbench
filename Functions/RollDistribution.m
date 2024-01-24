@@ -1,4 +1,4 @@
-function [distFront, distRear, distLeft, distRight, ratioFR, ratioLR] = ...
+function [distrFront, distrRear, distrLeft, distrRight, ratioFR, ratioLR] = ...
     RollDistribution(run, car)
 %RollDistribution Suspension Roll Distribution Calculator
 %   In: run, car | Out: frontDistribution, rearDistribution, ratio
@@ -10,13 +10,13 @@ FRzeroed = run.SuspPosFR - car.FRShockZero;
 RLzeroed = run.SuspPosRL - car.RLShockZero;
 RRzeroed = run.SuspPosRR - car.RRShockZero;
 
-% dist. = distribution
-distFront = FLzeroed - FRzeroed;
-distRear = RLzeroed - RRzeroed;
-distLeft = FLzeroed - RLzeroed;
-distRight = FRzeroed - RRzeroed;
+% distr. = distribution
+distrFront = FLzeroed - FRzeroed;
+distrRear = RLzeroed - RRzeroed;
+distrLeft = FLzeroed - RLzeroed;
+distrRight = FRzeroed - RRzeroed;
 
-ratioFR = mean(distFront) / mean(distRear);
-ratioLR = mean(distLeft) / mean(distRight);
+ratioFR = mean(distrFront) / mean(distrRear);
+ratioLR = mean(distrLeft) / mean(distrRight);
 
 end
