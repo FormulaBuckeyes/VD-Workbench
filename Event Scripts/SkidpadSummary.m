@@ -35,7 +35,10 @@ for k=1:length(lapTimes)
     n = int64(0.25/(data.Time(2)-data.Time(1))); % 0.25 second window size 
 %% Suspension
 suspensionSkidpadPlot(lapData.(runID),lapTimes(k),car,n)
-
+%% Drivetrain
+drivetrainSkidpadPlot(lapData.(runID),lapTimes(k),car,n)
+%%
+aeroSkidpadPlot(lapData.(runID),lapTimes(k),car,n)
 end
 
 %%
@@ -86,37 +89,131 @@ function [runs, times, avgLatGs, yawRates] = parseSkidpadRuns(data)
 
 end
 
-function suspensionSkidpadPlot(data, lapTime, car, smoothfactor)
+function suspensionSkidpadPlot(data, lapTime, car, smoothFactor)
 % Outputs: 
 %   Roll Distribution vs LatG
 %   Understeer Gradient
 
-% Roll Distribution vs Lateral G
-bumpFiltered = data(abs(data.GForceVertC185) < .21,:); % .21 is arbitrary
-[distrFront, distrRear, ~, ~, ratioFR, ~] = ...
-    RollDistribution(bumpFiltered, car);
+    % Roll Distribution vs Lateral G
+    bumpFiltered = data(abs(data.GForceVertC185) < .21,:); % .21 is arbitrary
+    [distrFront, distrRear, ~, ~, ratioFR, ~] = ...
+        RollDistribution(bumpFiltered, car);
+    
+    figure
+    tiledlayout(2,1)
+    nexttile
+    plot(bumpFiltered.GForceLatC185,distrFront,"rx",...
+        bumpFiltered.GForceLatC185,distrRear,"b+")
+    title(sprintf("Roll Distributions vs Lateral G - %f",lapTime))
+    legend("Front Roll Distr.","Rear Roll Distr.")
+    nexttile
+    plot(bumpFiltered.GForceLatC185,distrFront ./ distrRear,"kx")
+    yline(ratioFR,"b-")
+    legend("FR Ratio", sprintf("Avg: %f",ratioFR))
+    
+    % Understeer Gradient
+    [underAngle,ackerAngle,wheelAngle] = UndersteerAngle( ...
+        data.GForceLatC185, data.GPSSpeed, data.SteeredAngle, car);
+    
+    figure
+    tiledlayout(2,1)
+    nexttile
+    plot(data.GForceLatC185,wheelAngle,'bo')
+    xlabel("Lateral Acceleration (g)")
+    ylabel("Steered Angle (deg)")
+    title(sprintf("Understeer Gradient - %f",lapTime))
+    
+    nexttile
+    plot(data.Time,underAngle,'b-', ...
+        data.Time,ackerAngle,'g-', ...
+        data.Time,wheelAngle,'c-')
+    yline(0,'k-')
+    yline(mean(underAngle),'r-')
+    legend('Understeer Angle', 'Ackermann Angle', 'Wheel Angle', '0', ...
+        sprintf('Average UA: %f', mean(underAngle)))
+    xlabel("Time (s)")
+    ylabel("Angle (deg)")
 
-figure
-tiledlayout(2,1)
-nexttile
-plot(bumpFiltered.GForceLatC185,distrFront,"rx",...
-    bumpFiltered.GForceLatC185,distrRear,"b+")
-title(sprintf("Roll Distributions vs Lateral G - %f",lapTime))
-legend("Front Roll Distr.","Rear Roll Distr.")
-nexttile
-plot(bumpFiltered.GForceLatC185,distrFront ./ distrRear,"kx")
-yline(ratioFR,"b-")
-legend("FR Ratio", sprintf("Avg: %f",ratioFR))
+end
 
-% Understeer Gradient
-[underAngle,ackerAngle,wheelAngle] = UndersteerAngle( ...
-    data.GForceLatC185, data.GPSSpeed, data.SteeredAngle, car);
+function drivetrainSkidpadPlot(data, lapTime, car, smoothFactor)
+% Outputs: 
+%   Rear Wheel Speed Difference
+%   Differential Locking % - vs time and vs throttle pos
 
-figure
-plot(data.Time,underAngle,'b-')
-yline(0,'k-')
-yline(mean(underAngle),'r-')
-legend('Understeer Angle', '0', sprintf('Average: %f', mean(underAngle)))
-title(sprintf("Understeer Gradient - %f",lapTime))
+    % Rear Wheel Speed Difference
+    [RearSpeedDiff, FrontSpeedDiff, Optimal] = WheelSpeedDiff(data, car);
+    time = data.Time;
+    tiledlayout(3,1);
+    ax1 = nexttile();
+    plot(time,RearSpeedDiff,'k-'); hold on; grid on;
+    plot(time,FrontSpeedDiff,'r-');
+    plot(time,Optimal,'b--');
+    legend("Rear", "Front", "Optimal")
+    ylabel("Wheel Speed Diffs")
+    title(sprintf("Wheel Speed Differences - %f",lapTime))
+    ax2 = nexttile();
+    plot(time,data.ThrottlePos); grid on;
+    ylabel("Throttle Pos")
+    ax3 = nexttile();
+    plot(time,data.BrakePressureFront); grid on;
+    ylabel("Brake Pressure")
+    
+    linkaxes([ax1, ax2, ax3],'x')
+    
+    % Diff Locking Percent
+    %   Code
+    %   Plot
 
+end
+
+function aeroSkidpadPlot(data, lapTime, car, smoothFactor)
+    % Variables
+    time = data.Time;
+    SuspPosFL = data.SuspPosFL-data.SuspPosFL(1);
+    SuspPosFR = data.SuspPosFR-data.SuspPosFR(1);
+    SuspPosRL = data.SuspPosRL-data.SuspPosRL(1);
+    SuspPosRR = data.SuspPosRR-data.SuspPosRR(1);
+    SP_LF = smoothdata(SuspPosFL,'gaussian',smoothFactor);
+    SP_RF = smoothdata(SuspPosFR,'gaussian',smoothFactor);
+    SP_LR = smoothdata(SuspPosRL,'gaussian',smoothFactor);
+    SP_RR = smoothdata(SuspPosRR,'gaussian',smoothFactor);
+    MRF = 0.955; MRR = 0.99; % Motion Ratios [~]
+    L = car.wheelbase * 1000; % [mm]
+    
+    % Heave & Pitch & Roll
+    heave = SP_LF+SP_RF+SP_LR+SP_RR;
+    pitch = atand(((SP_LF+SP_RF)*MRF/2-(SP_LR-SP_RR)*MRR/2)/L);
+    rollFront = atand((SP_LF*MRF - SP_RF*MRF)/car.trackwidthFront);
+    rollRear = atand((SP_LR*MRR - SP_RR*MRR)/car.trackwidthRear);
+    
+    figure;
+    tiledlayout(4,1); sgtitle(sprintf('Heave, Pitch, Roll - %.3f [s]', lapTime));
+    z = zoom;
+    z.Motion = 'Horizontal';
+    ax1 = nexttile;
+    plot(time,data.GPSSpeed,'b-'); grid on; hold on;
+    plot(time,data.DriveSpeed,'r-')
+    setAxesZoomConstraint(z,ax1,'x');
+    ylabel('Speed [mph]'); ylim([0 70]);
+    legend('GPS Speed','Drive Speed','Location','southeast');
+
+    ax2 = nexttile; grid on; hold on;
+    plot(time,heave,'b-'); 
+    ylabel('Heave [mm]'); ylim([-25 1])
+    setAxesZoomConstraint(z,ax2,'x');
+
+    ax3 = nexttile; grid on; hold on;
+    plot(time,pitch,'b-');
+    ylabel('Pitch [deg]'); ylim([-0.15 0.25]);
+    setAxesZoomConstraint(z,ax3,'x');
+
+    ax4 = nexttile; grid on; hold on;
+    plot(time, rollFront, 'r-', time, rollRear, 'b-');
+    ylabel('Roll [deg]'); ylim([-0.15 0.25]);
+    legend("Front", "Rear")
+    setAxesZoomConstraint(z,ax4,'x');
+
+    linkaxes([ax1 ax2 ax3 ax4],'x');
+    xlim([min(time) max(time)]);
 end
