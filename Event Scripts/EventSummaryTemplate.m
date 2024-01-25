@@ -32,8 +32,8 @@ fprintf("Average gLat: %f\n", mean(data.GForceLatC185(1:end-1)))
 for k=1:length(lapTimes)
     runID = strcat('r',num2str(k));
     n = int64(0.25/(data.Time(2)-data.Time(1))); % 0.25 second window size 
-%% Suspension
-suspensionEventPlot(lapData.(runID),n,lapTimes(k))
+    %% Suspension
+    suspensionEventPlot(lapData.(runID),n,lapTimes(k))
 
 end
 
@@ -46,9 +46,9 @@ outputFilename = sprintf("%sEvent%s_%s.pdf", ...
 %%
 
 function [runs, times] = parseEventRuns(data)
-% Find all the laps (given by beacons) with an absolute value latG > 1,
-% then exoprt those as the laps. Therefore "laps" are turns. 
-
+% Find all the event runs. 
+% Input: data - csv file for the entire log
+% Outputs: runs - struct with log subsets, times - vector of lap times
 
 
 end

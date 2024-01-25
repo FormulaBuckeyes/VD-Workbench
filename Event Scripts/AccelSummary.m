@@ -30,10 +30,10 @@ fprintf("Average gLat: %f\n", mean(data.GForceLatC185(1:end-1)))
 for k=1:length(lapTimes)
     runID = strcat('r',num2str(k));
     n = int64(0.25/(data.Time(2)-data.Time(1))); % 0.25 second window size 
-%% Suspension
-suspensionAccelPlot(lapData.(runID),n,lapTimes(k))
-%% Electronics
-electronicsAccelPlot(lapData.(runID))
+    %% Suspension
+    suspensionAccelPlot(lapData.(runID),n,lapTimes(k))
+    %% Electronics
+    electronicsAccelPlot(lapData.(runID))
 
 end
 

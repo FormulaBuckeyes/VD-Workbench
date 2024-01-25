@@ -33,15 +33,12 @@ fprintf("Average gLat: %f\n", mean(data.GForceLatC185(1:end-1)))
 for k=1:length(lapTimes)
     runID = strcat('r',num2str(k));
     n = int64(0.25/(data.Time(2)-data.Time(1))); % 0.25 second window size 
-%% Suspension
-suspensionSkidpadPlot(lapData.(runID),lapTimes(k),car,n)
-%% Drivetrain
-drivetrainSkidpadPlot(lapData.(runID),lapTimes(k),car,n)
-%%
-aeroSkidpadPlot(lapData.(runID),lapTimes(k),car,n)
-
-%% Electronics
-electronicsSkidpadPlot(lapData.(runID))
+    %% Suspension
+    suspensionSkidpadPlot(lapData.(runID),lapTimes(k),car,n)
+    %% Drivetrain
+    drivetrainSkidpadPlot(lapData.(runID),lapTimes(k),car,n)
+    %% Aerodynamics
+    aeroSkidpadPlot(lapData.(runID),lapTimes(k),car,n)
 end
 
 %%
