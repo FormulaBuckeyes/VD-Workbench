@@ -32,6 +32,8 @@ for k=1:length(lapTimes)
     n = int64(0.25/(data.Time(2)-data.Time(1))); % 0.25 second window size 
 %% Suspension
 suspensionAccelPlot(lapData.(runID),n,lapTimes(k))
+%% Electronics
+electronicsAccelPlot(lapData.(runID))
 
 end
 
@@ -186,9 +188,9 @@ function electronicsAccelPlot(data)
     hold on;
     title("Alternator Current vs Time")
     
-    lsr = polyfit(data.Time, data.AlternatorCurrent, 1)
+    lsr = polyfit(data.Time, data.AlternatorCurrent, 1);
     plot(data.Time, polyval(lsr, data.Time))
-    r_matrix = corrcoef(data.Time, data.AlternatorCurrent)
+    r_matrix = corrcoef(data.Time, data.AlternatorCurrent);
     
     subtitle(sprintf("Average: %.3f [A]\ny = %.2ex + %.1f, r = %.3f", mean(data.AlternatorCurrent), lsr(1), lsr(2), r_matrix(1,2)))
     ylabel("Alternator Current [A]")
@@ -205,12 +207,12 @@ function electronicsAccelPlot(data)
     %% alternator current vs EngineRPM scatter plot
     figure;
     scatter(data.EngineRPM, data.AlternatorCurrent, 10, "filled");
-    alpha 0.01; hold on;
+    alpha 0.35; hold on;
     
     title("Alternator Current vs EngineRPM")
-    lsr = polyfit(data.EngineRPM, data.AlternatorCurrent, 1)
+    lsr = polyfit(data.EngineRPM, data.AlternatorCurrent, 1);
     plot(data.EngineRPM, polyval(lsr, data.EngineRPM))
-    r_matrix = corrcoef(data.EngineRPM, data.AlternatorCurrent)
+    r_matrix = corrcoef(data.EngineRPM, data.AlternatorCurrent);
     
     subtitle(sprintf("y = %.2ex + %.1f, r = %.3f", lsr(1), lsr(2), r_matrix(1,2)))
     ylabel("Alternator Current [A]")
