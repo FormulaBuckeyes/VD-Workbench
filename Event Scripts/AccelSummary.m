@@ -190,7 +190,7 @@ function electronicsAccelPlot(data)
     plot(data.Time, polyval(lsr, data.Time))
     r_matrix = corrcoef(data.Time, data.AlternatorCurrent)
     
-    subtitle(sprintf("Average: %.3f [A]\ny = %.3ex + %.1f, r = %.3f", mean(data.AlternatorCurrent), lsr(1), lsr(2), r_matrix(1,2)))
+    subtitle(sprintf("Average: %.3f [A]\ny = %.2ex + %.1f, r = %.3f", mean(data.AlternatorCurrent), lsr(1), lsr(2), r_matrix(1,2)))
     ylabel("Alternator Current [A]")
     xlabel("Time [s]")
     
@@ -212,7 +212,7 @@ function electronicsAccelPlot(data)
     plot(data.EngineRPM, polyval(lsr, data.EngineRPM))
     r_matrix = corrcoef(data.EngineRPM, data.AlternatorCurrent)
     
-    subtitle(sprintf("y = %.3ex + %.1f, r = %.3f", lsr(1), lsr(2), r_matrix(1,2)))
+    subtitle(sprintf("y = %.2ex + %.1f, r = %.3f", lsr(1), lsr(2), r_matrix(1,2)))
     ylabel("Alternator Current [A]")
     xlabel("EngineRPM [RPM]")
 end

@@ -1,6 +1,9 @@
 % Electronics - Not finished
 
 %% Current and Voltage vs Time
+data = run
+
+%% Current and Voltage vs Time
 % tiled layout
 figure;
 tiledlayout("flow");
@@ -8,162 +11,73 @@ sgtitle("Electronics");
 
 % total car current vs time
 nexttile;
-plot(run.Time, run.PMU_CURRENT)
+plot(data.Time, data.PMU_CURRENT)
 title("PMU Current vs Time")
-subtitle(sprintf("Average: %.5f [A]", mean(run.PMU_CURRENT)))
+subtitle(sprintf("Average: %.5f [A]", mean(data.PMU_CURRENT)))
 ylabel("PMU Current [A]")
 xlabel("Time [s]")
 
 % battery current vs time
 nexttile;
-plot(run.Time, run.BatteryCurrent)
+plot(data.Time, data.BatteryCurrent)
 title("Battery Current vs Time")
-subtitle(sprintf("Average: %.5f [A]", mean(run.BatteryCurrent)))
+subtitle(sprintf("Average: %.5f [A]", mean(data.BatteryCurrent)))
 ylabel("Battery Current [A]")
 xlabel("Time [s]")
 
 % alternator current vs time
 nexttile;
-plot(run.Time, run.AlternatorCurrent)
+plot(data.Time, data.AlternatorCurrent)
 hold on;
 title("Alternator Current vs Time")
 
-lsr = polyfit(run.Time, run.AlternatorCurrent, 1)
-plot(run.Time, polyval(lsr, run.Time))
-r_matrix = corrcoef(run.Time, run.AlternatorCurrent)
+lsr = polyfit(data.Time, data.AlternatorCurrent, 1)
+plot(data.Time, polyval(lsr, data.Time))
+r_matrix = corrcoef(data.Time, data.AlternatorCurrent)
 
-subtitle(sprintf("Average: %.5f [A]\ny = %.3ex + %.3f, r = %.3f", mean(run.AlternatorCurrent), lsr(1), lsr(2), r_matrix(1,2)))
+subtitle(sprintf("Average: %.3f [A]\ny = %.2ex + %.1f, r = %.3f", mean(data.AlternatorCurrent), lsr(1), lsr(2), r_matrix(1,2)))
 ylabel("Alternator Current [A]")
 xlabel("Time [s]")
 
 % battery voltage vs time
 nexttile;
-plot(run.Time, run.BatteryVolts)
+plot(data.Time, data.BatteryVolts)
 title("Battery Voltage vs Time")
-subtitle(sprintf("Average: %.5f [V]", mean(run.BatteryVolts)))
+subtitle(sprintf("Average: %.5f [V]", mean(data.BatteryVolts)))
 ylabel("Battery Voltage [V]")
 xlabel("Time [s]")
 
-% alternator current vs EngineRPM
+%% alternator current vs EngineRPM scatter plot
 figure;
-scatter(run.EngineRPM, run.AlternatorCurrent, 10, "filled");
+scatter(data.EngineRPM, data.AlternatorCurrent, 10, "filled");
 alpha 0.01; hold on;
 
 title("Alternator Current vs EngineRPM")
-lsr = polyfit(run.EngineRPM, run.AlternatorCurrent, 1)
-plot(run.EngineRPM, polyval(lsr, run.EngineRPM))
-r_matrix = corrcoef(run.EngineRPM, run.AlternatorCurrent)
+lsr = polyfit(data.EngineRPM, data.AlternatorCurrent, 1)
+plot(data.EngineRPM, polyval(lsr, data.EngineRPM))
+r_matrix = corrcoef(data.EngineRPM, data.AlternatorCurrent)
 
-subtitle(sprintf("y = %.3ex + %.3f, r = %.3f", lsr(1), lsr(2), r_matrix(1,2)))
+subtitle(sprintf("y = %.2ex + %.1f, r = %.3f", lsr(1), lsr(2), r_matrix(1,2)))
 ylabel("Alternator Current [A]")
 xlabel("EngineRPM [RPM]")
 
+%% All Currents Plots
+figure;
+hold on;
+title("Current vs Time")
 
-% % battery voltage derivative vs time
-% nexttile;
-% plot(run.Time, gradient(smoothdata(run.BatteryVolts)))
-% title("Batt Volt Derivative vs Time")
-% subtitle(sprintf("Average: %.5e [V/s]", mean(gradient(smoothdata(run.BatteryVolts)))))
-% ylabel("Batt Volt Derivative [V/s]")
-% xlabel("Time [s]")
-% 
-% 
-% 
-% %% Voltage Derivative Scatter Plots
-% % tiled layout
-% figure;
-% tiledlayout("vertical");
-% sgtitle("Electronics");
-% 
-% % battery voltage derivative vs throttle
-% nexttile;
-% scatter(run.ThrottlePos, gradient(smoothdata(run.BatteryVolts)), 10, "filled");
-% h = lsline; h.Color = 'b';
-% alpha 0.01
-% title("Batt Volt Deriv vs Throttle")
-% ylabel("Batt Volt Deriv [V/s]")
-% xlabel("Throttle [%]")
-% 
-% % battery voltage derivative vs EngineRPM
-% nexttile;
-% scatter(run.EngineRPM, gradient(smoothdata(run.BatteryVolts)), 10, "filled");
-% h = lsline; h.Color = 'b';
-% alpha 0.01
-% title("Batt Volt Deriv vs EngineRPM")
-% ylabel("Batt Volt Deriv [V/s]")
-% xlabel("EngineRPM [RPM]")
-% 
-% % battery voltage derivative vs DriveSpeed
-% nexttile;
-% scatter(run.DriveSpeed, gradient(smoothdata(run.BatteryVolts)), 10, "filled");
-% h = lsline; h.Color = 'b';
-% alpha 0.01
-% title("Batt Volt Deriv vs DriveSpeed")
-% ylabel("Batt Volt Deriv [V/s]")
-% xlabel("DriveSpeed [mph]")
+% total car current vs time
+plot(data.Time, data.PMU_CURRENT)
 
+% alternator current vs time
+plot(data.Time, data.AlternatorCurrent)
 
-% %% Battery Current Scatter Plots
-% % tiled layout
-% figure;
-% tiledlayout("vertical");
-% sgtitle("Electronics");
-% 
-% % battery current vs throttle
-% nexttile;
-% scatter(run.ThrottlePos, run.BatteryCurrent, 10, "filled");
-% h = lsline; h.Color = 'b';
-% alpha 0.01
-% title("BatteryCurrent vs Throttle")
-% ylabel("BatteryCurrent")
-% xlabel("Throttle")
-% 
-% % battery current vs EngineRPM
-% nexttile;
-% scatter(run.EngineRPM, run.BatteryCurrent, 10, "filled");
-% h = lsline; h.Color = 'b';
-% alpha 0.01
-% title("BatteryCurrent vs EngineRPM")
-% ylabel("BatteryCurrent")
-% xlabel("EngineRPM")
-% 
-% % battery current vs DriveSpeed
-% nexttile;
-% scatter(run.DriveSpeed, run.BatteryCurrent, 10, "filled");
-% h = lsline; h.Color = 'b';
-% alpha 0.01
-% title("BatteryCurrent vs DriveSpeed")
-% ylabel("BatteryCurrent")
-% xlabel("DriveSpeed")
+% battery current vs time
+plot(data.Time, data.BatteryCurrent)
 
-
-
-% %% Voltage Derivative vs Battery Current
-% % tiled layout
-% figure;
-% tiledlayout("vertical");
-% sgtitle("Electronics");
-% 
-% % battery voltage derivative vs battery current
-% nexttile;
-% scatter(run.BatteryCurrent, gradient(smoothdata(run.BatteryVolts)), 10, "filled");
-% h = lsline; h.Color = 'b';
-% alpha 0.01
-% title("Batt Volt Derivative vs BatteryCurrent")
-% ylabel("Batt Volt Derivative")
-% xlabel("BatteryCurrent")
-
-
-
-% figure;
-% % battery voltage derivative vs AccelLong
-% nexttile;
-% scatter(run.VehicleAccelLongIMU, gradient(smoothdata(run.BatteryVolts)), 10, "filled");
-% h = lsline; h.Color = 'b';
-% alpha 0.01
-% title("Batt Volt Deriv vs AccelLong")
-% ylabel("Batt Volt Deriv [V/s]")
-% xlabel("AccelLong [G]")
+xlabel("Time [s]")
+ylabel("Current [A]")
+legend("PMU", "Alternator", "Battery", "Location", "east")
 
 
 
