@@ -39,6 +39,8 @@ for k=1:length(lapTimes)
     drivetrainSkidpadPlot(lapData.(runID),lapTimes(k),car,n)
     %% Aerodynamics
     aeroSkidpadPlot(lapData.(runID),lapTimes(k),car,n)
+    %% Electronics
+    electronicsSkidpadPlot(lapData.(runID))
 end
 
 %%
