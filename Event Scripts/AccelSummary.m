@@ -217,4 +217,19 @@ function electronicsAccelPlot(data)
     subtitle(sprintf("y = %.2ex + %.1f, r = %.3f", lsr(1), lsr(2), r_matrix(1,2)))
     ylabel("Alternator Current [A]")
     xlabel("EngineRPM [RPM]")
+
+    %% All currents toghether (not sure if this is helpful)
+    figure;
+    hold on;
+    title("Currents vs Time")
+    % alternator current vs time
+    plot(data.Time, data.AlternatorCurrent)
+    % PMU current vs time
+    plot(data.Time, data.PMU_CURRENT)
+    % battery current vs time
+    plot(data.Time, data.BatteryCurrent)
+
+    legend("Alternator", "PMU", "Battery", "Location", "east")
+    xlabel("Time [s]")
+    ylabel("Current [A]")
 end
