@@ -22,9 +22,11 @@ fprintf("Report Generated: %s\n", datetime("now"))
 
 summaryTable = table((1:length(size(lapData)))',lapTimes', ...
     'VariableNames',["Lap #" "Lap Time"]);
-disp(summaryTable)
 
-fprintf("Average gLat: %f\n", mean(data.GForceLatC185(1:end-1)))
+fprintf("\nLap Averages:\n")
+disp(summaryTable)
+fprintf("Overall Averages:\n")
+disp(mean(summaryTable(:,"Lap Time")))
 
 %%
 for k=1:length(lapTimes)
